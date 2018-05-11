@@ -10,7 +10,7 @@ endif()
 
 target_link_libraries(tolua++_bootstrap
 	libtolua++
-	"${LUA_LIBRARIES}"
+	liblua
 )
 
 file(GLOB LUA_FILES
@@ -31,5 +31,5 @@ add_executable(tolua++
 
 target_link_libraries(tolua++
 	libtolua++
-	"${LUA_LIBRARIES}"
+	liblua
 )
