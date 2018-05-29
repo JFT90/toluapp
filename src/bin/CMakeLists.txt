@@ -5,12 +5,12 @@ add_executable(tolua++_bootstrap
 
 if(UNIX AND NOT APPLE)
 	find_library(DL_LIBRARY dl)
-	list(APPEND LUA_LIBRARIES ${DL_LIBRARY})
+	list(APPEND ${LIBLUA53} ${DL_LIBRARY})
 endif()
 
 target_link_libraries(tolua++_bootstrap
 	libtolua++
-	liblua
+	${LIBLUA53}
 )
 
 file(GLOB LUA_FILES
@@ -31,5 +31,5 @@ add_executable(tolua++
 
 target_link_libraries(tolua++
 	libtolua++
-	liblua
+	${LIBLUA53}
 )

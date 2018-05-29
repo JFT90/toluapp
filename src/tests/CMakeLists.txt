@@ -31,7 +31,7 @@ function(build_test FILE)
 
 	target_link_libraries("${BASE}"
 		libtolua++
-		${LUA_LIBRARIES}
+		${LIBLUA53}
 	)
 
 	add_test(NAME "${BASE}"
