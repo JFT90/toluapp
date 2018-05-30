@@ -30,7 +30,7 @@ function(build_test FILE)
 	)
 
 	target_link_libraries("${BASE}"
-		libtolua++
+		libtoluapp
 		${LIBLUA53}
 	)
 

@@ -30,6 +30,6 @@ add_executable(tolua++
 )
 
 target_link_libraries(tolua++
-	libtolua++
+	libtoluapp
 	${LIBLUA53}
 )

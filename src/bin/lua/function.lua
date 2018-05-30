@@ -520,7 +520,7 @@ end
 function join(t, sep, first, last)
 
 	first = first or 1
-	last = last or #t
+	last = last or table.getn(t)
 	local lsep = ""
 	local ret = ""
 	local loop = false

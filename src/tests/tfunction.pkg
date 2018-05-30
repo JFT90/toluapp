@@ -21,6 +21,7 @@ class Point
 	void setref (Point& p);
 	void setvalue (Point p);
 	void setconst (const Point* p);
+	void setname (const char* s);
 
 	void get (float* x=0, float* y=0) const;
 	void get (float v[2]=0) const;
@@ -28,6 +29,7 @@ class Point
 	Point& getref ();
 	Point getvalue ();
 	const Point* getconst () const;
+	const char* getname () const;
 
 	Point operator+ (const Point& p) const;
 	Point operator- (const Point& p) const;
@@ -55,7 +57,7 @@ void getpoint (const Point* p, float* x=0, float* y=0);
 void setpoint (Point* p, float x=0, float y=0);
 inline Point average (int n, Point v[n]);
 inline	Point averagepointer (int n, Point* v[n]);
-inline	void copyvector (int n, const Point v[n], Point u[n]=u+i); // (u+i) doesn't work (?)
+inline	void copyvector (int n, const Point v[n], Point u[n]=(u+i));
 
 inline Order invert (Order o);
 

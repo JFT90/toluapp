@@ -25,7 +25,7 @@
 /* Create metatable
 	* Create and register new metatable
 */
-static int tolua_newmetatable (lua_State* L, const char* name)
+static int tolua_newmetatable (lua_State* L, char* name)
 {
 	int r = luaL_newmetatable(L,name);
 
@@ -263,14 +263,15 @@ static int tolua_bnd_setpeer(lua_State* L) {
 		lua_pop(L, 1);
 		lua_pushvalue(L, TOLUA_NOPEER);
 	};
+	//lua_setfenv(L, -2);
 	lua_setuservalue(L, -2);
-
 	return 0;
 };
 
 static int tolua_bnd_getpeer(lua_State* L) {
 
 	/* stack: userdata */
+	//lua_getfenv(L, -1);
 	lua_getuservalue(L, -1);
 	if (lua_rawequal(L, -1, TOLUA_NOPEER)) {
 		lua_pop(L, 1);
@@ -281,14 +282,6 @@ static int tolua_bnd_getpeer(lua_State* L) {
 #endif
 
 /* static int class_gc_event (lua_State* L); */
-
-static void tolua_push_globals_table (lua_State* L)
-{
-  lua_pushvalue(L,LUA_REGISTRYINDEX); /* registry */
-  lua_pushnumber(L,LUA_RIDX_GLOBALS); /* registry globalsindex */
-  lua_rawget(L, -2);                  /* registry registry[globalsindex] */
-  lua_remove(L, -2);                  /* registry[globalsindex] */
-}
 
 TOLUA_API void tolua_open (lua_State* L)
 {
@@ -415,11 +408,12 @@ TOLUA_API void tolua_beginmodule (lua_State* L, const char* name)
 {
 	if (name)
 	{
-	 lua_pushstring(L,name);
-		lua_rawget(L,-2);
+		lua_pushstring(L, name);
+		lua_rawget(L, -2);
 	}
 	else
-	 tolua_push_globals_table(L);
+		//lua_pushvalue(L,LUA_GLOBALSINDEX);
+		lua_pushglobaltable(L);
 }
 
 /* End module
@@ -453,7 +447,8 @@ TOLUA_API void tolua_module (lua_State* L, const char* name, int hasvar)
 	else
 	{
 		/* global table */
-		tolua_push_globals_table(L);
+		lua_pushglobaltable(L);
+		//lua_pushvalue(L,LUA_GLOBALSINDEX);
 	}
 	if (hasvar)
 	{
@@ -481,7 +476,7 @@ TOLUA_API void tolua_module (lua_State* L, const char* name, int hasvar)
 	else
 	{
 		/* global table */
-		tolua_push_globals_table(L);
+		lua_pushvalue(L,LUA_GLOBALSINDEX);
 	}
 	if (hasvar)
 	{
