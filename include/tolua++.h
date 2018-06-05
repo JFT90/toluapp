@@ -42,6 +42,26 @@
 #   endif
 #endif
 
+
+/********************************
+******** CEGUI CHANGES **********
+********************************/
+
+// Win32 import/export
+#ifndef TOLUA_API
+#   ifdef _WIN32
+#      ifdef TOLUA_STATIC
+#          define TOLUA_API extern
+#      elif defined(libtoluapp_EXPORTS)
+#          define TOLUA_API __declspec(dllexport)
+#      else
+#          define TOLUA_API __declspec(dllimport)
+#      endif
+#   else
+#      define TOLUA_API extern
+#   endif
+#endif
+
 #define TOLUA_VERSION "tolua++-1.0.92"
 
 #ifdef __cplusplus
