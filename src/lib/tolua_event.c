@@ -423,42 +423,46 @@ static int class_gc_event (lua_State* L)
 */
 TOLUA_API int class_gc_event (lua_State* L)
 {
-	void* u = *((void**)lua_touserdata(L,1));
-	int top;
-	/*fprintf(stderr, "collecting: looking at %p\n", u);*/
-	/*
-	lua_pushstring(L,"tolua_gc");
-	lua_rawget(L,LUA_REGISTRYINDEX);
-	*/
-	lua_pushvalue(L, lua_upvalueindex(1));
-	lua_pushlightuserdata(L,u);
-	lua_rawget(L,-2);            /* stack: gc umt    */
-	lua_getmetatable(L,1);       /* stack: gc umt mt */
-	/*fprintf(stderr, "checking type\n");*/
-	top = lua_gettop(L);
-	if (tolua_fast_isa(L,top,top-1, lua_upvalueindex(2))) /* make sure we collect correct type */
+	void* u_data = lua_touserdata(L, 1);
+	if (u_data)
 	{
-		/*fprintf(stderr, "Found type!\n");*/
-		/* get gc function */
-		lua_pushliteral(L,".collector");
-		lua_rawget(L,-2);           /* stack: gc umt mt collector */
-		if (lua_isfunction(L,-1)) {
-			/*fprintf(stderr, "Found .collector!\n");*/
-		}
-		else {
-			lua_pop(L,1);
-			/*fprintf(stderr, "Using default cleanup\n");*/
-			lua_pushcfunction(L,tolua_default_collect);
-		}
+		void* u = *((void**)u_data);
+		int top;
+		/*fprintf(stderr, "collecting: looking at %p\n", u);*/
+		/*
+		lua_pushstring(L,"tolua_gc");
+		lua_rawget(L,LUA_REGISTRYINDEX);
+		*/
+		lua_pushvalue(L, lua_upvalueindex(1));
+		lua_pushlightuserdata(L, u);
+		lua_rawget(L, -2);            /* stack: gc umt    */
+		lua_getmetatable(L, 1);       /* stack: gc umt mt */
+		/*fprintf(stderr, "checking type\n");*/
+		top = lua_gettop(L);
+		if (tolua_fast_isa(L, top, top - 1, lua_upvalueindex(2))) /* make sure we collect correct type */
+		{
+			/*fprintf(stderr, "Found type!\n");*/
+			/* get gc function */
+			lua_pushliteral(L, ".collector");
+			lua_rawget(L, -2);           /* stack: gc umt mt collector */
+			if (lua_isfunction(L, -1)) {
+				/*fprintf(stderr, "Found .collector!\n");*/
+			}
+			else {
+				lua_pop(L, 1);
+				/*fprintf(stderr, "Using default cleanup\n");*/
+				lua_pushcfunction(L, tolua_default_collect);
+			}
 
-		lua_pushvalue(L,1);         /* stack: gc umt mt collector u */
-		lua_call(L,1,0);
+			lua_pushvalue(L, 1);         /* stack: gc umt mt collector u */
+			lua_call(L, 1, 0);
 
-		lua_pushlightuserdata(L,u); /* stack: gc umt mt u */
-		lua_pushnil(L);             /* stack: gc umt mt u nil */
-		lua_rawset(L,-5);           /* stack: gc umt mt */
+			lua_pushlightuserdata(L, u); /* stack: gc umt mt u */
+			lua_pushnil(L);             /* stack: gc umt mt u nil */
+			lua_rawset(L, -5);           /* stack: gc umt mt */
+		}
+		lua_pop(L, 3);
 	}
-	lua_pop(L,3);
 	return 0;
 }
 
